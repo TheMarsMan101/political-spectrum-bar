@@ -1,0 +1,193 @@
+/* ==========================================================================
+   Political Spectrum Bar — front-end styles
+   All colors and the marker position are set via CSS custom properties on
+   the .psb-wrap element (inlined by the PHP renderer).
+   ========================================================================== */
+
+.psb-wrap {
+	--psb-bar-height: 18px;
+	--psb-marker-size: 26px;
+	--psb-arrow-gap: 10px;
+	--psb-pointer-size: 14px;
+	--psb-pointer-gap: 6px;
+
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 640px;
+	margin: 1.5em auto;
+	font-family: inherit;
+	color: var(--psb-label);
+}
+
+.psb-wrap *,
+.psb-wrap *::before,
+.psb-wrap *::after { box-sizing: border-box; }
+
+/* ─── End labels row ─────────────────────────────────────────────── */
+.psb-labels {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	margin-bottom: 8px;
+	font-size: 0.9em;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--psb-label);
+	line-height: 1.2;
+}
+.psb-label {
+	max-width: 45%;
+	display: inline-block;
+}
+.psb-label-left  { text-align: left; }
+.psb-label-right { text-align: right; }
+
+/* ─── Bar row (arrows + bar) ─────────────────────────────────────── */
+.psb-bar-row {
+	display: flex;
+	align-items: center;
+	gap: var(--psb-arrow-gap);
+}
+
+.psb-arrow {
+	flex-shrink: 0;
+	color: var(--psb-arrow);
+	line-height: 0;
+	display: inline-flex;
+}
+.psb-arrow svg { display: block; }
+
+.psb-bar-track {
+	position: relative;
+	flex: 1 1 auto;
+	height: var(--psb-bar-height);
+	min-width: 0;
+}
+
+.psb-bar-fill {
+	position: absolute;
+	inset: 0;
+	background: var(--psb-bar-fill);
+	border-radius: calc(var(--psb-bar-height) / 2);
+}
+
+/* ─── The movable marker ball ────────────────────────────────────── */
+.psb-marker {
+	position: absolute;
+	top: 50%;
+	left: var(--psb-position);
+	width: var(--psb-marker-size);
+	height: var(--psb-marker-size);
+	background: var(--psb-marker);
+	border: 3px solid var(--psb-marker-border);
+	border-radius: 50%;
+	transform: translate(-50%, -50%);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+	z-index: 2;
+}
+
+/* ─── Pointer triangle row ──────────────────────────────────────────
+   Structure mirrors .psb-bar-row exactly — invisible flex "spacer"
+   arrows on each side and a .psb-pointer-track in the middle with the
+   same width as .psb-bar-track above. That way the triangle and label
+   can be positioned by the same --psb-position percentage and will
+   land directly under the marker regardless of viewport width. */
+.psb-pointer-row {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--psb-arrow-gap);
+	margin-top: var(--psb-pointer-gap);
+}
+
+.psb-pointer-spacer {
+	flex-shrink: 0;
+	width: 12px; /* matches the arrow SVG width exactly */
+	visibility: hidden;
+}
+
+.psb-pointer-track {
+	position: relative;
+	flex: 1 1 auto;
+	min-width: 0;
+	/* Height reserves space for the triangle + optional label. */
+	min-height: calc(var(--psb-pointer-size) * 0.75);
+}
+
+.psb-pointer {
+	position: absolute;
+	top: 0;
+	left: var(--psb-position);
+	transform: translateX(-50%);
+	width: var(--psb-pointer-size);
+	height: calc(var(--psb-pointer-size) * 0.75);
+	background: var(--psb-pointer);
+	clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.psb-pointer-label {
+	position: absolute;
+	top: calc(var(--psb-pointer-size) * 0.75 + 4px);
+	left: var(--psb-position);
+	transform: translateX(-50%);
+	font-size: 0.85em;
+	font-weight: 600;
+	color: var(--psb-pointer);
+	text-align: center;
+	white-space: nowrap;
+	line-height: 1.25;
+	max-width: min(280px, 80%);
+}
+
+/* ─── Optional numeric scale ─────────────────────────────────────── */
+.psb-scale {
+	display: flex;
+	align-items: center;
+	gap: var(--psb-arrow-gap);
+	margin-top: 18px;
+	font-size: 0.75em;
+	color: var(--psb-label);
+	opacity: 0.6;
+	letter-spacing: 0.04em;
+}
+.psb-scale-spacer {
+	flex-shrink: 0;
+	width: 12px;
+	visibility: hidden;
+}
+.psb-scale-track {
+	flex: 1 1 auto;
+	min-width: 0;
+	display: flex;
+	justify-content: space-between;
+}
+
+/* ─── Responsive adjustments ─────────────────────────────────────── */
+@media (max-width: 520px) {
+	.psb-wrap {
+		--psb-bar-height: 14px;
+		--psb-marker-size: 22px;
+		--psb-arrow-gap: 8px;
+		--psb-pointer-size: 12px;
+	}
+	.psb-labels { font-size: 0.8em; letter-spacing: 0.05em; }
+	.psb-pointer-label { font-size: 0.8em; }
+	.psb-scale { font-size: 0.7em; }
+}
+
+@media (max-width: 380px) {
+	.psb-wrap {
+		--psb-bar-height: 12px;
+		--psb-marker-size: 18px;
+		--psb-pointer-size: 10px;
+	}
+	.psb-labels { font-size: 0.72em; }
+}
+
+/* ─── Safety: override weird theme resets ───────────────────────── */
+.psb-wrap .psb-label,
+.psb-wrap .psb-pointer-label,
+.psb-wrap .psb-scale span {
+	margin: 0;
+	padding: 0;
+}
